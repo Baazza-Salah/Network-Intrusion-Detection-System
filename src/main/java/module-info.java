@@ -10,6 +10,7 @@ module com.main.networkintrusionsystem {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires annotations;
 
     opens com.app.networkintrusionsystem to javafx.fxml;
     exports com.app.networkintrusionsystem;

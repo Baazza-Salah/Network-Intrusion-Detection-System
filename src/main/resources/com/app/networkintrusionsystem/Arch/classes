@@ -1,0 +1,114 @@
+1. Main Application Class
+Class: MainApp
+
+    Description: The entry point of the application that initializes the JavaFX environment and manages scene transitions.
+    Possible Methods:
+        start(Stage primaryStage): Sets up the primary stage and loads the initial scene (login page).
+        loadScene(String fxml): Loads a new scene from the specified FXML file.
+
+2. Login Page
+Class: LoginController
+
+    Description: Manages user authentication and transitions to the packet capture page upon successful login.
+    Possible Methods:
+        initialize(): Initializes UI components.
+        handleLogin(ActionEvent event): Validates user credentials and navigates to the capture page.
+
+FXML File: LoginPage.fxml
+
+    Description: UI layout for the login page, including username and password fields and a login button.
+
+3. Packet Capture and Visualization Page
+Class: CaptureController
+
+    Description: Manages the packet capturing process, updates the UI with captured packets, and detects potential intrusions.
+    Possible Methods:
+        initialize(): Initializes the TableView and other UI components.
+        startCapture(): Begins capturing packets and updates the table.
+        stopCapture(): Stops the packet capturing process.
+        checkForIntrusions(): Analyzes packets for potential intrusions using IntrusionDetector.
+
+FXML File: CapturePage.fxml
+
+    Description: UI layout for the capturing page, featuring a TableView for displaying packets, start/stop buttons, and an intrusion detection button.
+
+4. Packet Capture Logic
+Class: PacketCapture
+
+    Description: Captures packets from the network interface using the Jpcap library.
+    Possible Methods:
+        startCapture(): Starts the packet capture process.
+        stopCapture(): Stops capturing packets.
+        processPacket(Packet packet): Processes each captured packet for further analysis.
+
+5. Intrusion Detection Logic
+Class: IntrusionDetector
+
+    Description: Interfaces with a Python machine learning model to analyze packets for potential threats.
+    Possible Methods:
+        detectIntrusion(Packet packet): Analyzes a single packet for signs of intrusion.
+        runModel(List<Packet> packets): Runs the machine learning model on a list of captured packets.
+
+6. Graphical Visualization Page
+Class: VisualizationController
+
+    Description: Manages the graphical representation of captured data, such as packet counts and detected threats.
+    Possible Methods:
+        initialize(): Initializes UI components for visualizations.
+        updateGraphs(): Updates charts and graphs with new data.
+
+FXML File: VisualizationPage.fxml
+
+    Description: UI layout for the visualization page, containing charts and graphs to represent captured packets and threats.
+
+7. Database Interaction
+Class: DatabaseManager
+
+    Description: Manages interactions with the MongoDB database to store and retrieve packet data and detected threats.
+    Possible Methods:
+        connect(): Establishes a connection to the MongoDB database.
+        insertPacket(PacketData packetData): Inserts captured packet data into the database.
+        retrievePackets(): Retrieves stored packets from the database.
+        insertThreat(ThreatData threatData): Inserts detected threat data into the database.
+
+Class: PacketData
+
+    Description: Model class representing the structure of packet data to be stored in MongoDB.
+    Possible Methods:
+        Getters and setters for properties such as timestamp, source, destination, and protocol.
+
+Class: ThreatData
+
+    Description: Model class representing detected threats and associated packet data.
+    Possible Methods:
+        Getters and setters for properties such as timestamp, type of threat, and affected packet.
+
+8. Styling
+File: style.css
+
+    Description: CSS file for styling the JavaFX application, defining styles for buttons, tables, charts, and other UI components.
+
+Relationships
+
+    MainApp:
+        Manages the LoginController, CaptureController, and VisualizationController.
+
+    LoginController:
+        Transitions to CaptureController upon successful login.
+
+    CaptureController:
+        Uses PacketCapture to handle packet capturing.
+        Interacts with IntrusionDetector to analyze captured packets.
+        Communicates with DatabaseManager to store and retrieve packets and threats.
+
+    PacketCapture:
+        Captures packets and updates CaptureController with captured data.
+
+    IntrusionDetector:
+        Analyzes packets and returns results to CaptureController.
+
+    VisualizationController:
+        Retrieves data from DatabaseManager for visual representation.
+
+    DatabaseManager:
+        Interacts with PacketData and ThreatData for database operations.
