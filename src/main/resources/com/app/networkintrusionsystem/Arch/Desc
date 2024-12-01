@@ -1,0 +1,11 @@
+
+    MainApp.java: Initializes the JavaFX application and loads the login page.
+    LoginController.java: Validates login credentials and transitions to the capturing page.
+    CaptureController.java: Starts and stops packet capturing, detects intrusions, and updates the TableView.
+    IntrusionDetector.java: Interfaces with the Python model to analyze packet data.
+    VisualizationController.java: Gathers statistics and updates graphical components.
+    DatabaseManager.java: Handles CRUD operations with MongoDB.
+    PacketData.java: Represents packet data structure for database storage.
+    ThreatData.java: Represents threat data structure for database storage.
+    PacketCapture.java: Captures packets from the network interface using Jpcap.
+
