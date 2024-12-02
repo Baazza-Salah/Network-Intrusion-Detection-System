@@ -20,7 +20,7 @@ public class MainApp extends Application {
             scene.getStylesheets().add(getClass().getResource("/com/app/networkintrusionsystem/LoginStyle.css").toExternalForm());
 
             // Set up stage
-            stage.setTitle("Login");
+            stage.setTitle("LoginNIDS");
             stage.setScene(scene);
 
             stage.show();
