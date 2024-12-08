@@ -16,11 +16,11 @@ public class MainApp extends Application {
             // Create scene
             Scene scene = new Scene(root, 1000, 500);
 
-            // Load CSS
+            // Load CSS for the login page
             scene.getStylesheets().add(getClass().getResource("/com/app/networkintrusionsystem/LoginStyle.css").toExternalForm());
 
             // Set up stage
-            stage.setTitle("LoginNIDS");
+            stage.setTitle("Login Page");
             stage.setScene(scene);
 
             stage.show();

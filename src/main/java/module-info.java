@@ -11,6 +11,10 @@ module com.main.networkintrusionsystem {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires annotations;
+    requires org.mongodb.driver.sync.client;
+    requires org.mongodb.driver.core;
+    requires org.mongodb.bson;
+    requires com.fasterxml.jackson.databind;
 
     opens com.app.networkintrusionsystem to javafx.fxml;
     exports com.app.networkintrusionsystem;

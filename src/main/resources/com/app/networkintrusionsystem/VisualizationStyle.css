@@ -1,0 +1,29 @@
+/* VisualizationStyle.css */
+
+VBox {
+    -fx-padding: 10;
+}
+
+Button {
+    -fx-font-size: 16px;
+    -fx-padding: 10px;
+    -fx-background-color: #2196F3; /* Blue color */
+    -fx-text-fill: white;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+Button:hover {
+    -fx-background-color: #1976D2; /* Darker blue on hover */
+}
+
+LineChart {
+    -fx-background-color: #ffffff; /* White background for charts */
+    -fx-padding: 10px;
+    -fx-border-color: #2196F3; /* Blue border */
+    -fx-border-width: 2px;
+}
+
+.pie-chart {
+    -fx-background-color: #ffffff; /* White background for pie chart */
+}
