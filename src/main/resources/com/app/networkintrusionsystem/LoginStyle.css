@@ -1,6 +1,9 @@
 /* LoginStyle.css */
 .root {
     -fx-background-color: white;
+    -fx-background-image:url('backgi.jpg');
+    -fx-background-size:cover;
+    -fx-background-repeat: no-repeat;
 }
 
 .container {
