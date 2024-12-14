@@ -1,51 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.chart.BarChart?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.app.networkintrusionsystem.VisualizationController">
-    <ScrollPane style="-fx-background-color: #ffffff; -fx-border-color: blue;">
-        <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #f0f0f0; -fx-padding: 10;">
-            <HBox spacing="10" alignment="CENTER">
-                <Button fx:id="capturePacketsButton" text="Capture Packets and Detect Intrusion" style="-fx-background-color: blue; -fx-text-fill: white;"/>
-                <Label fx:id="intrusionStatus" style="-fx-text-fill: red;"/>
-            </HBox>
-            <LineChart fx:id="lineChart" prefHeight="400" style="-fx-background-color: #ffffff;">
-                <xAxis>
-                    <CategoryAxis label="Hour"/>
-                </xAxis>
-                <yAxis>
-                    <NumberAxis label="Packets Captured"/>
-                </yAxis>
-            </LineChart>
-            <HBox spacing="10" alignment="CENTER">
-                <PieChart fx:id="pieChart" prefHeight="300" prefWidth="300" style="-fx-background-color: #ffffff;"/>
-                <BarChart fx:id="barChartIP" prefHeight="300" prefWidth="300" style="-fx-background-color: #ffffff;">
+<HBox styleClass="container" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.app.networkintrusionsystem.VisualizationController">
+    <VBox alignment="CENTER" prefHeight="800" prefWidth="1000" spacing="20">
+        <HBox alignment="CENTER" spacing="100">
+            <Button fx:id="capturePacketsButton" styleClass="button" text="Capture Packets">
+            <font>
+               <Font name="Footlight MT Light" size="20.0" />
+            </font></Button>
+            <Label fx:id="intrusionStatus" styleClass="status-label" />
+        </HBox>
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+            <VBox alignment="CENTER" prefHeight="582.0" prefWidth="998.0" spacing="10" styleClass="main-vbox">
+                <LineChart fx:id="lineChart" prefHeight="295.0" prefWidth="998.0">
                     <xAxis>
-                        <CategoryAxis label="IP Destinations"/>
+                        <CategoryAxis label="Hour" />
                     </xAxis>
                     <yAxis>
-                        <NumberAxis label="Count"/>
+                        <NumberAxis label="Packets Captured" />
                     </yAxis>
-                </BarChart>
-                <BarChart fx:id="barChartProtocol" prefHeight="300" prefWidth="300" style="-fx-background-color: #ffffff;">
-                    <xAxis>
-                        <CategoryAxis label="Protocols"/>
-                    </xAxis>
-                    <yAxis>
-                        <NumberAxis label="Count"/>
-                    </yAxis>
-                </BarChart>
-            </HBox>
-        </VBox>
-    </ScrollPane>
-</AnchorPane>
+                </LineChart>
+                <HBox alignment="CENTER" spacing="10">
+                    <BarChart fx:id="barChartIP" prefHeight="300" prefWidth="267.0">
+                        <xAxis>
+                            <CategoryAxis label="IP Destinations" />
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis label="Count" />
+                        </yAxis>
+                    </BarChart>
+                    <PieChart fx:id="pieChart" prefHeight="300" prefWidth="310.0" titleSide="RIGHT" />
+                    <BarChart fx:id="barChartProtocol" prefHeight="300" prefWidth="279.0">
+                        <xAxis>
+                            <CategoryAxis label="Protocols" />
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis label="Count" />
+                        </yAxis>
+                    </BarChart>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </VBox>
+
+    <VBox alignment="CENTER" prefWidth="500" spacing="20">
+        <Label prefHeight="34.0" prefWidth="155.0" styleClass="header-label" text="Captured Packets" textAlignment="RIGHT">
+         <font>
+            <Font name="Agency FB" size="27.0" />
+         </font>
+         <opaqueInsets>
+            <Insets top="100.0" />
+         </opaqueInsets></Label>
+        <ListView fx:id="packetListView" prefHeight="600.0" prefWidth="500.0" />
+    </VBox>
+</HBox>

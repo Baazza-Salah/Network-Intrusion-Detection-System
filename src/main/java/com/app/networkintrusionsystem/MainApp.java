@@ -11,16 +11,16 @@ public class MainApp extends Application {
     public void start(Stage stage) {
         try {
             // Load the LoginController
-            Parent root = FXMLLoader.load(getClass().getResource("/com/app/networkintrusionsystem/LoginPage.fxml"));
+//            Parent root = FXMLLoader.load(getClass().getResource("/com/app/networkintrusionsystem/LoginPage.fxml"));
+//            Scene scene = new Scene(root,1000,500);
+//            scene.getStylesheets().add(getClass().getResource("/com/app/networkintrusionsystem/LoginStyle.css").toExternalForm());
 
-            // Create scene
-            Scene scene = new Scene(root, 1000, 500);
-
-            // Load CSS for the login page
-            scene.getStylesheets().add(getClass().getResource("/com/app/networkintrusionsystem/LoginStyle.css").toExternalForm());
+            Parent root = FXMLLoader.load(getClass().getResource("/com/app/networkintrusionsystem/VisualizationPage.fxml"));
+            Scene scene = new Scene(root,1000,500);
+            scene.getStylesheets().add(getClass().getResource("/com/app/networkintrusionsystem/VisualizationStyle.css").toExternalForm());
 
             // Set up stage
-            stage.setTitle("Login Page");
+            stage.setTitle("Network Intrusion Detection System");
             stage.setScene(scene);
 
             stage.show();

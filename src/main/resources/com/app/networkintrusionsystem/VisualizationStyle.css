@@ -1,9 +1,21 @@
 /* VisualizationStyle.css */
 
+/* General padding for VBox */
 VBox {
     -fx-padding: 10;
+    -fx-background-color: transparent;
 }
 
+.container {
+    -fx-padding: 20px;
+    -fx-spacing: 15px;
+    -fx-alignment: center;
+    -fx-background-image:url('backgi.jpg');
+    -fx-background-size:cover;
+    -fx-background-repeat: no-repeat;
+}
+
+/* Styling for buttons */
 Button {
     -fx-font-size: 16px;
     -fx-padding: 10px;
@@ -17,13 +29,55 @@ Button:hover {
     -fx-background-color: #1976D2; /* Darker blue on hover */
 }
 
+/* LineChart styling */
 LineChart {
-    -fx-background-color: #ffffff; /* White background for charts */
+    -fx-background-color: transparent; /* White background for charts */
     -fx-padding: 10px;
     -fx-border-color: #2196F3; /* Blue border */
     -fx-border-width: 2px;
 }
 
+/* PieChart styling */
 .pie-chart {
     -fx-background-color: #ffffff; /* White background for pie chart */
+}
+
+/* ScrollPane styling */
+.scroll-pane {
+    -fx-background-color: #f0f0f0; /* Light background */
+    -fx-border-color: blue;         /* Blue border */
+    -fx-border-width: 1px;          /* Border width */
+}
+
+/* Main VBox styling */
+.main-vbox {
+    -fx-background-color: #ffffff;  /* White background for main VBox */
+    -fx-padding: 10;
+}
+
+/* Status label styling */
+.status-label {
+    -fx-text-fill: red;              /* Red text for intrusion status */
+    -fx-font-weight: bold;           /* Bold text */
+}
+
+/* General chart styling */
+.line-chart, .pie-chart, .bar-chart {
+    -fx-background-color: rgba(255, 0, 0, 0);   /* White background for charts */
+}
+
+/* Label styling */
+.label {
+    -fx-font-size: 14px;             /* Font size for labels */
+}
+
+/* BarChart styling */
+.bar-chart {
+    -fx-background-color: #ffffff;   /* White background for bar charts */
+}
+
+.header-label{
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
 }
