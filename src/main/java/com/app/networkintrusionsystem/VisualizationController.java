@@ -5,12 +5,17 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.Cursor;
+import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
@@ -22,35 +27,78 @@ import java.util.Map;
 public class VisualizationController {
     @FXML
     private LineChart<String, Number> lineChart;
+
     @FXML
     private PieChart pieChart;
+
     @FXML
     private BarChart<String, Number> barChartIP;
+
     @FXML
     private BarChart<String, Number> barChartProtocol;
+
     @FXML
     private Button capturePacketsButton;
+
     @FXML
     private Label intrusionStatus;
+
+    @FXML
+    private ListView<String> packetListView; // Change to ListView
 
     private static final String JSON_FILE_PATH = "src/main/java/com/app/networkintrusionsystem/data.json";
 
     @FXML
     public void initialize() {
         loadDataAndInitializeCharts();
+        capturePacketsButton.setCursor(Cursor.HAND);
+
+        // Set custom cell factory for coloring ListView items
+        packetListView.setCellFactory(lv -> new ListCell<String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    if (item.contains("blocked")) {
+                        setStyle("-fx-background-color: #ff6969"); // Blocked packets in red
+                    } else {
+                        setStyle("-fx-background-color: #74ff74"); // Received packets in light green
+                    }
+                }
+            }
+        });
     }
 
     private void loadDataAndInitializeCharts() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             Map<String, Object> data = mapper.readValue(new File(JSON_FILE_PATH), Map.class);
-            initializeLineChart((List<Map<String, Object>>) data.get("packets"));
-            initializePieChart((List<Map<String, Object>>) data.get("packets"));
-            initializeBarChartIP((List<Map<String, Object>>) data.get("packets"));
-            initializeBarChartProtocol((List<Map<String, Object>>) data.get("packets"));
+            List<Map<String, Object>> packets = (List<Map<String, Object>>) data.get("packets");
+
+            initializeLineChart(packets);
+            initializePieChart(packets);
+            initializeBarChartIP(packets);
+            initializeBarChartProtocol(packets);
+            logPacketInfo(packets); // Log packet information
         } catch (IOException e) {
             e.printStackTrace();
+            intrusionStatus.setText("Error loading data: " + e.getMessage());
         }
+    }
+
+    private void logPacketInfo(List<Map<String, Object>> packets) {
+        ObservableList<String> packetList = FXCollections.observableArrayList();
+        for (Map<String, Object> packet : packets) {
+            String status = (String) packet.get("status");
+            String logEntry = String.format("Time: %s, Status: %s, Destination: %s, Protocol: %s",
+                    packet.get("timestamp"), status, packet.get("destination"), packet.get("protocol"));
+            packetList.add(logEntry);
+        }
+        packetListView.setItems(packetList); // Set items in ListView
     }
 
     private void initializeLineChart(List<Map<String, Object>> packets) {
