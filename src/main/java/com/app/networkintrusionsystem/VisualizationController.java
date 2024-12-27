@@ -1,5 +1,8 @@
 package com.app.networkintrusionsystem;
 
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
@@ -15,8 +18,8 @@ import javafx.scene.text.Text;
 import javafx.scene.Cursor;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +47,7 @@ public class VisualizationController {
     private Label intrusionStatus;
 
     @FXML
-    private ListView<String> packetListView; // Change to ListView
+    private ListView<String> packetListView;
 
     private static final String JSON_FILE_PATH = "src/main/java/com/app/networkintrusionsystem/data.json";
 
@@ -71,6 +74,11 @@ public class VisualizationController {
                 }
             }
         });
+
+        // Set up a timeline to refresh data every few seconds
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> loadDataAndInitializeCharts()));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
     private void loadDataAndInitializeCharts() {
@@ -79,11 +87,16 @@ public class VisualizationController {
             Map<String, Object> data = mapper.readValue(new File(JSON_FILE_PATH), Map.class);
             List<Map<String, Object>> packets = (List<Map<String, Object>>) data.get("packets");
 
+            lineChart.getData().clear(); // Clear previous data
+            pieChart.getData().clear(); // Clear previous data
+            barChartIP.getData().clear(); // Clear previous data
+            barChartProtocol.getData().clear(); // Clear previous data
+            logPacketInfo(packets); // Log packet information
+
             initializeLineChart(packets);
             initializePieChart(packets);
             initializeBarChartIP(packets);
             initializeBarChartProtocol(packets);
-            logPacketInfo(packets); // Log packet information
         } catch (IOException e) {
             e.printStackTrace();
             intrusionStatus.setText("Error loading data: " + e.getMessage());
@@ -104,7 +117,6 @@ public class VisualizationController {
     private void initializeLineChart(List<Map<String, Object>> packets) {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Packets Captured");
-
         Map<String, Integer> hourlyCount = new HashMap<>();
 
         for (Map<String, Object> packet : packets) {
