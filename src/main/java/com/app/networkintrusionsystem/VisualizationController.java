@@ -1,9 +1,9 @@
 package com.app.networkintrusionsystem;
 
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
@@ -13,13 +13,26 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.scene.Cursor;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +66,8 @@ public class VisualizationController {
 
     @FXML
     public void initialize() {
-        loadDataAndInitializeCharts();
+        // Load initial data and initialize charts
+        updateCharts(); // Initial load
         capturePacketsButton.setCursor(Cursor.HAND);
 
         // Set custom cell factory for coloring ListView items
@@ -76,27 +90,24 @@ public class VisualizationController {
         });
 
         // Set up a timeline to refresh data every few seconds
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> loadDataAndInitializeCharts()));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> updateCharts()));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
     }
 
-    private void loadDataAndInitializeCharts() {
+    private void updateCharts() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             Map<String, Object> data = mapper.readValue(new File(JSON_FILE_PATH), Map.class);
             List<Map<String, Object>> packets = (List<Map<String, Object>>) data.get("packets");
 
-            lineChart.getData().clear(); // Clear previous data
-            pieChart.getData().clear(); // Clear previous data
-            barChartIP.getData().clear(); // Clear previous data
-            barChartProtocol.getData().clear(); // Clear previous data
             logPacketInfo(packets); // Log packet information
 
-            initializeLineChart(packets);
-            initializePieChart(packets);
-            initializeBarChartIP(packets);
-            initializeBarChartProtocol(packets);
+            // Update charts
+            updateLineChart(packets);
+            updatePieChart(packets);
+            updateBarChartIP(packets);
+            updateBarChartProtocol(packets);
         } catch (IOException e) {
             e.printStackTrace();
             intrusionStatus.setText("Error loading data: " + e.getMessage());
@@ -114,7 +125,7 @@ public class VisualizationController {
         packetListView.setItems(packetList); // Set items in ListView
     }
 
-    private void initializeLineChart(List<Map<String, Object>> packets) {
+    private void updateLineChart(List<Map<String, Object>> packets) {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Packets Captured");
         Map<String, Integer> hourlyCount = new HashMap<>();
@@ -125,12 +136,24 @@ public class VisualizationController {
             hourlyCount.put(hour, hourlyCount.getOrDefault(hour, 0) + 1);
         }
 
-        hourlyCount.forEach((hour, count) -> series.getData().add(new XYChart.Data<>(hour, count)));
+        // Add new data to the series without clearing previous
+        hourlyCount.forEach((hour, count) -> {
+            series.getData().add(new XYChart.Data<>(hour, count));
+        });
+
+        lineChart.getData().clear(); // Clear previous data for smooth updates
         lineChart.getData().add(series);
         lineChart.setCreateSymbols(false); // Disable symbols for a smoother look
+
+        // Set line color for the line chart
+        series.nodeProperty().addListener((obs, oldNode, newNode) -> {
+            if (newNode != null) {
+                newNode.setStyle("-fx-stroke: #2196F3;"); // Blue color for line
+            }
+        });
     }
 
-    private void initializePieChart(List<Map<String, Object>> packets) {
+    private void updatePieChart(List<Map<String, Object>> packets) {
         int receivedCount = 0;
         int blockedCount = 0;
 
@@ -143,8 +166,18 @@ public class VisualizationController {
             }
         }
 
+        pieChart.getData().clear(); // Clear previous data
         pieChart.getData().add(new PieChart.Data("Received (" + receivedCount + ")", receivedCount));
         pieChart.getData().add(new PieChart.Data("Blocked (" + blockedCount + ")", blockedCount));
+
+        // Set colors for the pie chart
+        for (PieChart.Data data : pieChart.getData()) {
+            if (data.getName().contains("Received")) {
+                data.getNode().setStyle("-fx-pie-color: #2196F3;"); // Blue for received
+            } else {
+                data.getNode().setStyle("-fx-pie-color: #f44336;"); // Red for blocked
+            }
+        }
 
         // Intrusion detection
         if (blockedCount > 0) {
@@ -154,7 +187,7 @@ public class VisualizationController {
         }
     }
 
-    private void initializeBarChartIP(List<Map<String, Object>> packets) {
+    private void updateBarChartIP(List<Map<String, Object>> packets) {
         Map<String, Integer> ipCount = new HashMap<>();
 
         for (Map<String, Object> packet : packets) {
@@ -162,13 +195,24 @@ public class VisualizationController {
             ipCount.put(destination, ipCount.getOrDefault(destination, 0) + 1);
         }
 
+        barChartIP.getData().clear(); // Clear previous data
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("IP Destination Usage");
         ipCount.forEach((ip, count) -> series.getData().add(new XYChart.Data<>(ip, count)));
+
+        // Set colors for the bar chart
+        series.getData().forEach(data -> {
+            data.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                if (newNode != null) {
+                    newNode.setStyle("-fx-bar-fill: #42a5f5;"); // Light blue color for bars
+                }
+            });
+        });
+
         barChartIP.getData().add(series);
     }
 
-    private void initializeBarChartProtocol(List<Map<String, Object>> packets) {
+    private void updateBarChartProtocol(List<Map<String, Object>> packets) {
         Map<String, Integer> protocolCount = new HashMap<>();
 
         for (Map<String, Object> packet : packets) {
@@ -176,9 +220,40 @@ public class VisualizationController {
             protocolCount.put(protocol, protocolCount.getOrDefault(protocol, 0) + 1);
         }
 
+        barChartProtocol.getData().clear(); // Clear previous data
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Protocol Usage");
         protocolCount.forEach((protocol, count) -> series.getData().add(new XYChart.Data<>(protocol, count)));
+
+        // Set colors for the bar chart
+        series.getData().forEach(data -> {
+            data.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                if (newNode != null) {
+                    newNode.setStyle("-fx-bar-fill: #42a5f5;"); // Light blue color for bars
+                }
+            });
+        });
+
         barChartProtocol.getData().add(series);
     }
+
+
+    @FXML
+    private void goToCapturePage() {
+
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/com/app/networkintrusionsystem/capturepackets.fxml"));
+            Scene scene = new Scene(root, 1000, 500);
+
+            // Load CSS for the visualization page
+            scene.getStylesheets().add(getClass().getResource("/com/app/networkintrusionsystem/capturestyle.css").toExternalForm());
+
+            Stage stage = (Stage) capturePacketsButton.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

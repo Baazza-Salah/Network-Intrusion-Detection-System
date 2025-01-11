@@ -15,11 +15,17 @@ public class MainApp extends Application {
 //            Scene scene = new Scene(root,1000,500);
 //            scene.getStylesheets().add(getClass().getResource("/com/app/networkintrusionsystem/LoginStyle.css").toExternalForm());
 
-            Parent root = FXMLLoader.load(getClass().getResource("/com/app/networkintrusionsystem/VisualizationPage.fxml"));
-            Scene scene = new Scene(root,1000,500);
-            scene.getStylesheets().add(getClass().getResource("/com/app/networkintrusionsystem/VisualizationStyle.css").toExternalForm());
+//            Parent root = FXMLLoader.load(getClass().getResource("/com/app/networkintrusionsystem/VisualizationPage.fxml"));
+//            Scene scene = new Scene(root,1000,500);
+//            scene.getStylesheets().add(getClass().getResource("/com/app/networkintrusionsystem/VisualizationStyle.css").toExternalForm());
 
-            // Set up stage
+
+            Parent root = FXMLLoader.load(getClass().getResource("/com/app/networkintrusionsystem/capturepackets.fxml"));
+            Scene scene = new Scene(root,1000,500);
+            scene.getStylesheets().add(getClass().getResource("/com/app/networkintrusionsystem/capturestyle.css").toExternalForm());
+
+
+            //Set up stage
             stage.setTitle("Network Intrusion Detection System");
             stage.setScene(scene);
 

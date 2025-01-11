@@ -20,7 +20,21 @@
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
         </dependency>
-<!--        <dependency>-->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20241224</version>
+        </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.slytechs.jnet</groupId>-->
+<!--                <artifactId>jnetpcap</artifactId>-->
+<!--                <version>2.0.1+jdk.21</version>-->
+<!--            </dependency>-->
+
+
+
+
+        <!--        <dependency>-->
 <!--            <groupId>org.pcap4j</groupId>-->
 <!--            <artifactId>pcap4j-core</artifactId>-->
 <!--            <version>1.8.1</version>-->
@@ -159,6 +173,7 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -166,6 +181,9 @@
                 <configuration>
                     <source>21</source>
                     <target>21</target>
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>

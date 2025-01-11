@@ -5,12 +5,26 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.networkintrusionsystem.LoginController" spacing="15" alignment="CENTER" styleClass="container">
-    <Label text="Login" styleClass="title"/>
-    <TextField fx:id="usernameField" promptText="Username" styleClass="text-field"/>
-    <PasswordField fx:id="passwordField" promptText="Password" styleClass="text-field"/>
-    <Button fx:id="loginButton" text="Login" onAction="#handleLogin"/>
-</VBox>
+<StackPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.app.networkintrusionsystem.LoginController" styleClass="global-container">
+    <HBox spacing="0" styleClass="main-container">
+        <VBox spacing="15" alignment="CENTER" styleClass="login-container">
+            <Label text="Log in" styleClass="login-title"/>
+            <TextField fx:id="usernameField" promptText="Enter your email address" styleClass="text-field"/>
+            <PasswordField fx:id="passwordField" promptText="Enter your password" styleClass="text-field"/>
+            <Button fx:id="loginButton" text="Log in" onAction="#handleLogin" styleClass="login-button"/>
+            <Label text="Forgot your credential? Click here" styleClass="link"/>
+            <Label text="Sign up" styleClass="link"/>
+        </VBox>
 
+        <VBox alignment="CENTER" styleClass="blue-panel">
+            <Label text="NETWORK" styleClass="panel-title"/>
+            <Label text="INTRUSION" styleClass="panel-title"/>
+            <Label text="DETECTION" styleClass="panel-title"/>
+            <Label text="SYSTEM" styleClass="panel-title"/>
+        </VBox>
+    </HBox>
+</StackPane>
