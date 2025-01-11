@@ -7,6 +7,8 @@ module com.app.networkintrusionsystem {
     requires javafx.fxml;
     requires com.fasterxml.jackson.databind;
     requires annotations;
+    requires jnetpcap;
+    requires json;
 
     opens com.app.networkintrusionsystem to javafx.fxml;
 

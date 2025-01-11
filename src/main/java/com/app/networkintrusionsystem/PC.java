@@ -1,105 +1,58 @@
 package com.app.networkintrusionsystem;
 
-import javafx.application.Platform;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 import org.jnetpcap.packet.PcapPacketHandler;
 import org.jnetpcap.protocol.network.Ip4;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class CaptureController {
+public class PC {
 
-    @FXML
-    private ListView<String> packetListView;
-
-    @FXML
-    private Button startButton;
-
-    @FXML
-    private Button stopButton;
-
-    @FXML
-    private Button backButton;
-
-    @FXML
-    private Label statusLabel;
-
-    private Pcap pcap;
-
-    private volatile boolean capturing = false; // Make capturing volatile
-
-    @FXML
-    public void initialize() {
-        stopButton.setDisable(true);
+    public static void main(String[] args) {
+        packetSniffer();
     }
 
-    @FXML
-    public void startCapture() {
-        capturing = true;
-        startButton.setDisable(true);
-        stopButton.setDisable(false);
-        statusLabel.setText("Capturing network traffic...");
-
-        new Thread(this::packetSniffer).start();
-    }
-
-    @FXML
-    public void stopCapture() {
-        capturing = false; // Stop capturing
-        startButton.setDisable(false);
-        stopButton.setDisable(true);
-        statusLabel.setText("Capture stopped.");
-
-        if (pcap != null) {
-            pcap.breakloop(); // Stop the loop without closing the pcap handle
-        }
-    }
-
-    private void packetSniffer() {
+    public static void packetSniffer() {
         List<PcapIf> devices = new ArrayList<>();
         StringBuilder errorBuffer = new StringBuilder();
 
         // Find all available devices
         int result = Pcap.findAllDevs(devices, errorBuffer);
         if (result == Pcap.NOT_OK || devices.isEmpty()) {
-            Platform.runLater(() -> {
-                statusLabel.setText("Error finding devices: " + errorBuffer.toString());
-            });
+            System.err.printf("Error finding devices: %s\n", errorBuffer.toString());
             return;
         }
 
-        // Look for the specific device (adjust as necessary)
-        PcapIf selectedDevice = devices.stream().filter(device -> device.getName().equals("\\Device\\NPF_{CAA5E8E3-FEF0-4429-B7A1-DACE0B677B0C}")).findFirst().orElse(null);
+        // Look for the specific device
+        PcapIf selectedDevice = null;
+        for (PcapIf device : devices) {
+            if (device.getName().equals("\\Device\\NPF_{CAA5E8E3-FEF0-4429-B7A1-DACE0B677B0C}")) {
+                selectedDevice = device;
+                break;
+            }
+        }
 
         if (selectedDevice == null) {
-            Platform.runLater(() -> {
-                statusLabel.setText("Device not found.");
-            });
+            System.err.println("Device not found.");
             return;
         }
+
+        System.out.printf("Using device: %s - %s\n", selectedDevice.getName(),
+                selectedDevice.getDescription() == null ? "No description" : selectedDevice.getDescription());
 
         // Open the device for packet capture
         int snaplen = 64 * 1024; // Capture all packets, no truncation
         int flags = Pcap.MODE_PROMISCUOUS; // Capture all packets
         int timeout = 10 * 1000; // 10 seconds in milliseconds
 
-        pcap = Pcap.openLive(selectedDevice.getName(), snaplen, flags, timeout, errorBuffer);
+        Pcap pcap = Pcap.openLive(selectedDevice.getName(), snaplen, flags, timeout, errorBuffer);
+
         if (pcap == null) {
-            Platform.runLater(() -> {
-                statusLabel.setText("Error opening device for capture: " + errorBuffer.toString());
-            });
+            System.err.printf("Error opening device for capture: %s\n", errorBuffer.toString());
             return;
         }
 
@@ -123,14 +76,12 @@ public class CaptureController {
                 protocol = "Ethernet";
             }
 
-            String packetInfo = String.format("[%s] Packet: %s -> %s, Protocol: %s",
+            // Print packet information with formatted date
+            System.out.printf("[%s] Packet: %s -> %s, Protocol: %s\n",
                     formattedDate,
                     sourceIp == null ? "Unknown" : sourceIp,
                     destIp == null ? "Unknown" : destIp,
                     protocol);
-
-            // Update the ListView on the JavaFX Application Thread
-            Platform.runLater(() -> packetListView.getItems().add(packetInfo));
 
             // Prepare the packet data
             Map<String, Object> packetData = new HashMap<>();
@@ -139,20 +90,18 @@ public class CaptureController {
             packetData.put("dest_ip", destIp == null ? "Unknown" : destIp);
             packetData.put("protocol", protocol);
 
-            // Save the captured packet data to a JSON file
+            // Save the captured packet data to the JSON file
             savePacketToJson(packetData);
         };
 
-        // Start capturing packets
-        while (capturing) {
-            pcap.loop(Pcap.LOOP_INFINITE, packetHandler, "Packet Capture");
-        }
+        // Start capturing packets for 10 seconds
+        pcap.loop(Pcap.LOOP_INFINITE, packetHandler, "Packet Capture");
 
         // Close capturing
         pcap.close();
     }
 
-    private void savePacketToJson(Map<String, Object> packetData) {
+    private static void savePacketToJson(Map<String, Object> packetData) {
         ObjectMapper objectMapper = new ObjectMapper();
         File file = new File("packet.json");
 
@@ -188,23 +137,5 @@ public class CaptureController {
             }
         }
         return sb.toString();
-    }
-
-    @FXML
-    private void goBack() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("com/app/networkintrusionsystem/VisualizationPage.fxml"));
-            Scene scene = new Scene(root, 1000, 500); // Set desired width and height
-
-            // Load CSS for the visualization page
-            scene.getStylesheets().add(getClass().getResource("com/app/networkintrusionsystem/VisualizationStyle.css").toExternalForm());
-
-            Stage stage = (Stage) backButton.getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("Visualization Page"); // Set the title for the new scene
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

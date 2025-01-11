@@ -22,7 +22,7 @@
       "timestamp": "2023-12-05T00:00:00Z",
       "protocol": "TCP",
       "size": 512,
-      "status": "received"
+      "status": "blocked"
     },
     {
       "id": 1,

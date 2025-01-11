@@ -63,4 +63,5 @@ public class LoginController {
             parent.getChildren().add(invalidCredsLabel);
         }
     }
+
 }
