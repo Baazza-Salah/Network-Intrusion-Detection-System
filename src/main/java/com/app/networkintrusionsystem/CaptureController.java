@@ -13,6 +13,8 @@ import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 import org.jnetpcap.packet.PcapPacketHandler;
 import org.jnetpcap.protocol.network.Ip4;
+import org.jnetpcap.protocol.tcpip.Tcp;
+import org.jnetpcap.protocol.tcpip.Udp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
@@ -73,7 +75,7 @@ public class CaptureController {
 
         // Find all available devices
         int result = Pcap.findAllDevs(devices, errorBuffer);
-        if (result == Pcap.NOT_OK || devices.isEmpty()) {
+        if (result != Pcap.OK || devices.isEmpty()) {
             Platform.runLater(() -> {
                 statusLabel.setText("Error finding devices: " + errorBuffer.toString());
             });
@@ -108,9 +110,13 @@ public class CaptureController {
         // Packet handler to process captured packets
         PcapPacketHandler<String> packetHandler = (packet, user) -> {
             Ip4 ip = new Ip4();
+            Tcp tcp = new Tcp();
+            Udp udp = new Udp();
             String sourceIp = null;
             String destIp = null;
             String protocol = "Unknown";
+            int srcPort = 0;
+            int dstPort = 0;
 
             long timestamp = packet.getCaptureHeader().timestampInMillis();
             String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(timestamp));
@@ -119,15 +125,26 @@ public class CaptureController {
                 sourceIp = byteArrayToIPv4(ip.source());
                 destIp = byteArrayToIPv4(ip.destination());
                 protocol = "IP";
+            }
+            if (packet.hasHeader(tcp)) {
+                protocol = "TCP";
+                srcPort = tcp.source();
+                dstPort = tcp.destination();
+            } else if (packet.hasHeader(udp)) {
+                protocol = "UDP";
+                srcPort = udp.source();
+                dstPort = udp.destination();
             } else if (packet.hasHeader(new org.jnetpcap.protocol.lan.Ethernet())) {
                 protocol = "Ethernet";
             }
 
-            String packetInfo = String.format("[%s] Packet: %s -> %s, Protocol: %s",
+            String packetInfo = String.format("[%s] Packet: %s -> %s, Protocol: %s, Src Port: %d, Dst Port: %d",
                     formattedDate,
                     sourceIp == null ? "Unknown" : sourceIp,
                     destIp == null ? "Unknown" : destIp,
-                    protocol);
+                    protocol,
+                    srcPort,
+                    dstPort);
 
             // Update the ListView on the JavaFX Application Thread
             Platform.runLater(() -> packetListView.getItems().add(packetInfo));
@@ -138,15 +155,16 @@ public class CaptureController {
             packetData.put("source_ip", sourceIp == null ? "Unknown" : sourceIp);
             packetData.put("dest_ip", destIp == null ? "Unknown" : destIp);
             packetData.put("protocol", protocol);
+            packetData.put("src_port", srcPort);
+            packetData.put("dst_port", dstPort);
+            packetData.put("data", packet.toHexdump());
 
             // Save the captured packet data to a JSON file
             savePacketToJson(packetData);
         };
 
         // Start capturing packets
-        while (capturing) {
-            pcap.loop(Pcap.LOOP_INFINITE, packetHandler, "Packet Capture");
-        }
+        pcap.loop(Pcap.LOOP_INFINITE, packetHandler, "Packet Capture");
 
         // Close capturing
         pcap.close();
@@ -208,3 +226,7 @@ public class CaptureController {
         }
     }
 }
+
+
+
+/***************** WORKING LATEST ONE *****************/
