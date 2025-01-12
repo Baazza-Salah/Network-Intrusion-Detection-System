@@ -10,7 +10,7 @@ module com.app.networkintrusionsystem {
     requires jnetpcap;
     requires json;
 
-    opens com.app.networkintrusionsystem to javafx.fxml;
+    opens com.app.networkintrusionsystem.controller to javafx.fxml;
 
-    exports com.app.networkintrusionsystem;
+    exports com.app.networkintrusionsystem.presentation;
 }

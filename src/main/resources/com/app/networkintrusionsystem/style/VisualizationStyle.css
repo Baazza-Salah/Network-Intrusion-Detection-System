@@ -1,0 +1,188 @@
+/* VisualizationStyle.css */
+
+.container {
+    -fx-background-color: #f5f5f5;
+    -fx-background-image:url('../ressources/backgi.jpg');
+    -fx-background-size:cover;
+    -fx-background-repeat: no-repeat;
+    -fx-padding: 20px;
+}
+
+/* Button Styles */
+.button {
+    -fx-background-color: #4285F4;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.button:hover {
+    -fx-background-color: derive(#4285F4, -10%);
+}
+
+.buttonLO {
+    -fx-background-color: #ff4444;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.buttonLO:hover {
+    -fx-background-color: derive(#ff4444, -10%);
+}
+
+/* Status Label */
+.status-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #666666;
+    -fx-padding: 5px;
+}
+
+/* ScrollPane Styling */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Main VBox Container */
+.main-vbox {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 3);
+}
+
+/* Chart Styling */
+.chart {
+    -fx-padding: 10px;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke: #f0f0f0;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: #f0f0f0;
+}
+
+/* LineChart specific */
+.line-chart {
+    -fx-create-symbols: false;
+}
+
+.series0.chart-series-line {
+    -fx-stroke: #4285F4;
+    -fx-stroke-width: 2px;
+}
+
+/* BarChart specific */
+.bar-chart {
+    -fx-bar-fill: #4285F4;
+}
+
+.bar-chart:hover {
+    -fx-bar-fill: derive(#4285F4, -10%);
+}
+
+/* PieChart specific */
+.pie-chart {
+    -fx-pie-color: #4285F4, #34A853, #FBBC05, #EA4335;
+}
+
+.pie-chart-legend {
+    -fx-background-color: transparent;
+}
+
+/* ListView Styling */
+.list-view {
+    -fx-background-color: white;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.list-cell {
+    -fx-padding: 8px;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #E0E0E0 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: #E3F2FD;
+    -fx-text-fill: #1976D2;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: #F5F5F5;
+}
+
+/* Header Label */
+.header-label {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+/* Chart Axis */
+.axis {
+    -fx-tick-label-fill: #666666;
+    -fx-font-size: 12px;
+}
+
+.axis-label {
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+}
+
+/* Custom Scrollbar */
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #BDBDBD;
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track {
+    -fx-background-color: transparent;
+}
+
+/* Chart Legend */
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+}
+
+.chart-legend-item {
+    -fx-text-fill: #666666;
+}
+
+/* Animation for hover effects */
+.button, .buttonLO {
+    -fx-transition: -fx-background-color 0.2s ease-in-out;
+}
+
+.list-cell {
+    -fx-transition: -fx-background-color 0.1s ease-in-out;
+}
