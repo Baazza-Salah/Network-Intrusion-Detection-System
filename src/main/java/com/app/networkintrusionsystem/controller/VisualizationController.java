@@ -42,6 +42,8 @@ public class VisualizationController {
 
     @FXML
     private Button capturePacketsButton;
+    @FXML
+    private Button logOut;
 
     @FXML
     private Label intrusionStatus;
@@ -56,6 +58,7 @@ public class VisualizationController {
         // Load initial data and initialize charts
         updateCharts(); // Initial load
         capturePacketsButton.setCursor(Cursor.HAND);
+        logOut.setCursor(Cursor.HAND);
 
         // Set custom cell factory for coloring ListView items
         packetListView.setCellFactory(lv -> new ListCell<String>() {
@@ -233,6 +236,23 @@ public class VisualizationController {
             scene.getStylesheets().add(getClass().getResource("/com/app/networkintrusionsystem/style/capturestyle.css").toExternalForm());
 
             Stage stage = (Stage) capturePacketsButton.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void goToLoginPage() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/com/app/networkintrusionsystem/fxmlFiles/LoginPage.fxml"));
+            Scene scene = new Scene(root, 1000, 500);
+
+            // Load CSS for the visualization page
+            scene.getStylesheets().add(getClass().getResource("/com/app/networkintrusionsystem/style/LoginStyle.css").toExternalForm());
+
+            Stage stage = (Stage) logOut.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

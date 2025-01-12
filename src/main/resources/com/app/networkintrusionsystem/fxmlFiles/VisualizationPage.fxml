@@ -58,7 +58,7 @@
     </VBox>
 
     <VBox alignment="CENTER" prefWidth="500" spacing="20">
-        <Button fx:id="capturePacketsButton1" styleClass="buttonLO" text="Log out">
+        <Button fx:id="logOut" styleClass="buttonLO" text="Log out" onAction="#goToLoginPage">
             <font>
                 <Font name="Footlight MT Light" size="20.0" />
             </font>
