@@ -1,0 +1,75 @@
+.global-container{
+    -fx-alignment: center; /* Center the content */
+    -fx-padding: 0; /* No padding */
+    -fx-pref-height: 100px; /* Full height */
+    -fx-pref-width: 100px; /* Full width */}
+
+.main-container {
+    -fx-background-color: #a6dcff; /* Light blue background */
+    -fx-background-image:url('../ressources/backgi.jpg');
+    -fx-background-size:cover;
+    -fx-background-repeat: no-repeat;
+    -fx-padding:120px;
+    -fx-pref-height: 100px; /* Full height */
+}
+
+.login-container {
+    -fx-padding: 30;
+    -fx-background-color: white; /* White background for login fields */
+    -fx-background-radius: 10; /* Rounded corners */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.0, 0, 2); /* Shadow effect */
+    -fx-pref-width: 400px; /* Fixed width for the login section */
+}
+
+.login-title {
+    -fx-font-size: 28px;
+    -fx-font-family: 'Arial Black'; /* Bold font */
+    -fx-text-fill: #333; /* Dark text */
+}
+
+.text-field {
+    -fx-pref-width: 300px; /* Adjusted width */
+    -fx-padding: 10;
+    -fx-background-color: white;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5;
+}
+
+.text-field:focused {
+    -fx-border-color: #004cb1; /* Darker green when focused */
+}
+
+.login-button {
+    -fx-pref-width: 300px; /* Adjusted width */
+    -fx-background-color: #004cb1; /* Dark green background */
+    -fx-text-fill: white; /* White text */
+    -fx-font-size: 16px; /* Increased font size */
+    -fx-padding: 10;
+    -fx-background-radius: 5; /* Rounded corners */
+}
+
+.login-button:hover {
+    -fx-background-color: #004cb1; /* Darker green on hover */
+}
+
+.link {
+    -fx-text-fill: #004cb1; /* Green text for links */
+    -fx-opacity: 0.8; /* Slightly faded */
+    -fx-underline: true; /* Underline for links */
+    -fx-cursor: hand; /* Pointer cursor */
+}
+
+.blue-panel {
+    -fx-background-color: #004cb1; /* Blue background */
+    -fx-background-radius: 10; /* Rounded corners */
+    -fx-padding: 40; /* Increased padding */
+    -fx-pref-width: 400px; /* Fixed width for the blue panel */
+    -fx-alignment: center; /* Center text */
+}
+
+.panel-title {
+    -fx-font-size: 36px; /* Increased font size */
+    -fx-font-family: 'Arial Black'; /* Bold font */
+    -fx-text-fill: white; /* White text */
+    -fx-text-alignment: center; /* Centered text */
+}
